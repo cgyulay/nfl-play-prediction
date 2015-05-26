@@ -29,7 +29,7 @@ labels = ['', 'SHORT LEFT PASS', 'SHORT RIGHT PASS', 'SHORT MIDDLE PASS',
 
 
 def format_data():
-  dataset = os.path.join(os.path.split(__file__)[0], "..", "data", 'pbp2014.csv')
+  dataset = os.path.join(os.path.split(__file__)[0], "..", "data", 'nfl_savant_pbp_2014.csv')
   with open(dataset, 'rb') as csvfile:
     pbp = csv.reader(csvfile, delimiter=',')
 
