@@ -96,11 +96,13 @@ def format_data():
       processed_play.append(offense_is_home(off_team, play[17]))
 
       processed_plays.append(processed_play)
-      # if i > 1:
-      #   break
+      # if len(processed_plays) >= 10000: break
 
     print('Unlabeled: {0}'.format(unlabeled_plays))
     print('Labeled: {0}'.format(len(processed_plays)))
+
+    processed_plays = np.asarray(processed_plays, dtype=np.int32)
+    print(processed_plays[1])
     return processed_plays
 
 def pickle_data(data):
