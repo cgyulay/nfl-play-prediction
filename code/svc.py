@@ -11,10 +11,18 @@ def train_model(data):
   train_set_x, train_set_y = data[0]
   test_set_x, test_set_y = data[1]
 
-  print('READY TO EFFING GO')
+  print('Training model...')
+
+  clf = svm.SVC()
+  clf.fit(train_set_x, train_set_y)
+
+  prediction = clf.predict(test_set_x[1])
+  print('prediction: {0}, label: {1}'.format(prediction, test_set_y[1]))
 
 # Load data
 def load_data(dataset):
+  print('Loading dataset...')
+
   dataset = os.path.join(data_path, dataset)
   unpickled = cPickle.load(open(dataset, 'rb'))
 
@@ -23,7 +31,7 @@ def load_data(dataset):
 
   # Divide into 80% training and 20% test data
   n_train = int(0.8 * len(x))
-  n_total = len(x) - n_train
+  n_total = len(x)
 
   train_set_x = x[:n_train, :]
   train_set_y = y[:n_train]
