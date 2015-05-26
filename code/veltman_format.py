@@ -19,12 +19,15 @@ features = ['QTR', 'SECONDS_REMAINING', 'OFF_TEAM', 'DEF_TEAM', 'DOWN',
 'DAY', 'OFF_IS_HOME', 'PLAY_TYPE']
 
 # Labels
-labels = ['', 'PASS', 'RUN', 'PUNT', 'FIELD GOAL']
+labels = ['', 'PASS', 'RUN', 'PUNT', 'FIELD_GOAL']
 
 # Teams
 teams = ['ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE', 'DAL', 'DEN',
 'DET', 'GB', 'HOU', 'IND', 'JAX', 'KC','MIA', 'MIN', 'NE', 'NO', 'NYG', 'NYJ',
 'OAK', 'PHI', 'PIT', 'SD', 'SEA', 'SF', 'STL', 'TB', 'TEN', 'WAS']
+
+# Data path
+data_path = os.path.join(os.path.split(__file__)[0], '..', 'data')
 
 
 def format_data():
@@ -35,6 +38,8 @@ def format_data():
     plays = csv.reader(csvfile, delimiter='\t')
 
     processed_plays = []
+    unlabeled_plays = 0
+
     for i, play in enumerate(plays):
       if i == 0: continue
       processed_play = []
@@ -46,6 +51,8 @@ def format_data():
       label = label_from_options(play[19])
       processed_play.append(label)
       if label == 0:
+        # print('Unlabeled: {0}\n'.format(play[19]))
+        unlabeled_plays += 1
         continue
 
       # Quarter
@@ -89,20 +96,31 @@ def format_data():
       processed_play.append(offense_is_home(off_team, play[17]))
 
       processed_plays.append(processed_play)
-      if i > 1:
-        break
+      # if i > 1:
+      #   break
 
-    # print(processed_plays)
+    print('Unlabeled: {0}'.format(unlabeled_plays))
+    print('Labeled: {0}'.format(len(processed_plays)))
     return processed_plays
 
 def pickle_data(data):
-  print('pickle_data TODO')
+  save_path = os.path.join(data_path, 'formatted_veltman_pbp.pkl')
+  print('Saving formatted play by play data to {0}'.format(save_path))
+
+  cPickle.dump(data, open(save_path, 'wb'))
 
 def label_from_options(options):
-  options = options.split('|')
+  # options = options.split('|')
   target = ''
 
-  # print(options)
+  if 'RUN' in options:
+    target = 'RUN'
+  elif 'PASS' in options or 'INTERCEPTION' in options:
+    target = 'PASS'
+  elif 'PUNT' in options:
+    target = 'PUNT'
+  elif 'FIELD_GOAL' in options:
+    target = 'FIELD_GOAL'
 
   return labels.index(target)
 
