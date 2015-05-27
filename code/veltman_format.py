@@ -59,7 +59,7 @@ def format_data():
       processed_play.append(int(play[2]))
 
       # Seconds remaining in game
-      # processed_play.append(seconds_remaining(int(play[3]), int(play[4])))
+      processed_play.append(seconds_remaining(int(play[3]), int(play[4])))
 
       # Down
       processed_play.append(int(play[7]))
@@ -84,13 +84,13 @@ def format_data():
       processed_play.append(int(play[12]))
 
       # Year
-      # processed_play.append(int(play[14]))
+      processed_play.append(int(play[14]))
 
       # Month
-      # processed_play.append(int(play[15]))
+      processed_play.append(int(play[15]))
 
       # Day
-      # processed_play.append(int(play[16]))
+      processed_play.append(int(play[16]))
 
       # Offense is home team
       processed_play.append(offense_is_home(off_team, play[17]))
@@ -100,19 +100,22 @@ def format_data():
       # print('\n')
 
       processed_plays.append(processed_play)
-      if len(processed_plays) >= 10000: break
+      if len(processed_plays) >= 20000: break
 
     print('Unlabeled: {0}'.format(unlabeled_plays))
     print('Labeled: {0}'.format(len(processed_plays)))
 
-    processed_plays = np.asarray(processed_plays, dtype=np.int32)
-
-    return processed_plays
+    # Normalize
+    processed_plays = np.asarray(processed_plays, dtype=np.float32)
+    return normalize_columns(processed_plays)
 
 def pickle_data(data):
-  save_path = os.path.join(data_path, 'formatted_veltman_pbp_small.pkl')
-  print('Saving formatted play by play data to {0}'.format(save_path))
+  save_path = os.path.join(
+    data_path,
+    'formatted_veltman_pbp_normalized_small.pkl'
+  )
 
+  print('Saving formatted play by play data to {0}'.format(save_path))
   cPickle.dump(data, open(save_path, 'wb'))
 
 def label_from_options(options):
@@ -144,7 +147,15 @@ def one_hot_team(team):
 def offense_is_home(off_team, home_team):
   return int(off_team == home_team)
 
+def normalize_columns(data):
+  for i in xrange(1, len(data[0])):
+    max = np.amax(data[:,i])
+    if max != 0:
+      data[:,i] /= max
+  return data
+
 
 if __name__ == '__main__':
   formatted_data = format_data()
   pickle_data(formatted_data)
+
