@@ -19,7 +19,7 @@ features = ['QTR', 'SECONDS_REMAINING', 'OFF_TEAM', 'DEF_TEAM', 'DOWN',
 'DAY', 'OFF_IS_HOME', 'PLAY_TYPE']
 
 # Labels
-labels = ['', 'PASS', 'RUN', 'PUNT', 'FIELD_GOAL']
+labels = ['RUN', 'PASS', 'PUNT', 'FIELD_GOAL', '']
 
 # Teams
 teams = ['ARI', 'ATL', 'BAL', 'BUF', 'CAR', 'CHI', 'CIN', 'CLE', 'DAL', 'DEN',
@@ -50,7 +50,7 @@ def format_data():
       # Determine label from a few options
       label = label_from_options(play[19])
       processed_play.append(label)
-      if label == 0:
+      if label == 4:
         # print('Unlabeled: {0}\n'.format(play[19]))
         unlabeled_plays += 1
         continue
@@ -59,7 +59,7 @@ def format_data():
       processed_play.append(int(play[2]))
 
       # Seconds remaining in game
-      processed_play.append(seconds_remaining(int(play[3]), int(play[4])))
+      # processed_play.append(seconds_remaining(int(play[3]), int(play[4])))
 
       # Down
       processed_play.append(int(play[7]))
@@ -84,29 +84,33 @@ def format_data():
       processed_play.append(int(play[12]))
 
       # Year
-      processed_play.append(int(play[14]))
+      # processed_play.append(int(play[14]))
 
       # Month
-      processed_play.append(int(play[15]))
+      # processed_play.append(int(play[15]))
 
       # Day
-      processed_play.append(int(play[16]))
+      # processed_play.append(int(play[16]))
 
       # Offense is home team
       processed_play.append(offense_is_home(off_team, play[17]))
 
+      # print(processed_play)
+      # print(play[10], play[19])
+      # print('\n')
+
       processed_plays.append(processed_play)
-      # if len(processed_plays) >= 10000: break
+      if len(processed_plays) >= 10000: break
 
     print('Unlabeled: {0}'.format(unlabeled_plays))
     print('Labeled: {0}'.format(len(processed_plays)))
 
     processed_plays = np.asarray(processed_plays, dtype=np.int32)
-    print(processed_plays[1])
+
     return processed_plays
 
 def pickle_data(data):
-  save_path = os.path.join(data_path, 'formatted_veltman_pbp.pkl')
+  save_path = os.path.join(data_path, 'formatted_veltman_pbp_small.pkl')
   print('Saving formatted play by play data to {0}'.format(save_path))
 
   cPickle.dump(data, open(save_path, 'wb'))

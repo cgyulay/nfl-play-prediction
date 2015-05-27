@@ -2,6 +2,7 @@ import os
 import cPickle
 import numpy as np
 from sklearn import svm
+from sklearn.ensemble import RandomForestClassifier
 
 # Data path
 data_path = os.path.join(os.path.split(__file__)[0], '..', 'data')
@@ -13,11 +14,56 @@ def train_model(data):
 
   print('Training model...')
 
-  clf = svm.SVC()
-  clf.fit(train_set_x, train_set_y)
+  # model = svm.SVC()
+  # model.fit(train_set_x, train_set_y)
 
-  prediction = clf.predict(test_set_x[1])
-  print('prediction: {0}, label: {1}'.format(prediction, test_set_y[1]))
+  model = RandomForestClassifier()
+  model.fit(train_set_x, train_set_y)
+
+  test_accuracy(model, test_set_x, test_set_y)
+
+# Accuracy
+def test_accuracy(model, test_set_x, test_set_y):
+  print('Calculating accuracy...')
+
+  predictions = model.predict(test_set_x)
+  score = np.mean(predictions == test_set_y)
+  print(score)
+
+  # 0, 1, 2, 3
+  # RUN, PASS, PUNT, FIELD_GOAL
+
+  labels = {}
+  preds = {}
+  for j in xrange(0, 4):
+    labels[j] = {
+      'c': 0,
+      'i': 0,
+      0: 0,
+      1: 0,
+      2: 0,
+      3: 0
+    }
+    preds[j] = 0
+
+  for j in xrange(1, len(test_set_x)):
+    x = test_set_x[j]
+    y = test_set_y[j]
+
+    pred = model.predict(x)
+    correct = pred[0] == y
+
+    if correct:
+      labels[y]['c'] += 1
+    else:
+      labels[y]['i'] += 1
+
+    labels[y][pred[0]] += 1
+    preds[pred[0]] += 1
+
+  print(labels)
+  print(preds)
+
 
 # Load data
 def load_data(dataset):
