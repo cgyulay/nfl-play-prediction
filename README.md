@@ -1,5 +1,5 @@
 # nfl-play-prediction
-Crudely predicting NFL play call from game situations.
+Crudely predicting NFL play call from game situations. [The base dataset](https://github.com/veltman/nflplays) covers the regular and postseason for the years 2002-2012.
 
 ----
 
