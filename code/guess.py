@@ -5,8 +5,6 @@ from veltman_format import teams
 
 class PlayCallGame():
   def __init__(self):
-    self.guesses = []
-    self.answers = []
     self.start()
 
   def start(self):
