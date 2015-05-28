@@ -31,8 +31,13 @@ Any other game situations (e.g., conversions or kick-offs) were excluded from tr
 
 
 #### Models
-Two models were trained on the play by play data: an SVC and a random forest (neural nets TODO). You can run either by modifying and running code/models.py to suit your preference.
+Two models were trained on the play by play data: an SVC and a random forest. You can run either by modifying and running code/models.py to suit your preference.
 
 
 #### Game
 You can test your own ability as a coach by running code/guess.py -- a text-based play calling game. You are presented the game situation and you must make the correct call.
+
+
+----
+#### Roadmap
+A trove of relevant information is likely stored in the preceding sequences of plays. Better test accuracy could probably be achieved by ordering the play by play data by series and accounting for the preceding play calls and outcomes. It would be especially interesting to tackle this problem with an RNN. Even without play sequences, using a [vanilla neural net](https://github.com/cgyulay/theano-nn) might yield better training accuracy.
