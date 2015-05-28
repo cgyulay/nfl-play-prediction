@@ -59,7 +59,12 @@ def format_data():
       processed_play.append(int(play[2]))
 
       # Seconds remaining in game
-      processed_play.append(seconds_remaining(int(play[3]), int(play[4])))
+      seconds = seconds_remaining(int(play[3]), int(play[4]))
+      processed_play.append(seconds)
+      if seconds < 0:
+        # print('Seconds < 0: {0}:{1}\n'.format(play[3], play[4]))
+        unlabeled_plays += 1
+        continue
 
       # Down
       processed_play.append(int(play[7]))
@@ -109,10 +114,11 @@ def format_data():
     processed_plays = np.asarray(processed_plays, dtype=np.float32)
     return normalize_columns(processed_plays)
 
+
 def pickle_data(data):
   save_path = os.path.join(
     data_path,
-    'formatted_veltman_pbp_normalized_small.pkl'
+    'formatted_veltman_pbp_small.pkl'
   )
 
   print('Saving formatted play by play data to {0}'.format(save_path))

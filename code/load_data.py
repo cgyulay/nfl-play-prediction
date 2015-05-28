@@ -7,8 +7,10 @@ import numpy as np
 data_path = os.path.join(os.path.split(__file__)[0], '..', 'data')
 
 # Load data
-def load_data(dataset):
-  print('Loading dataset...')
+def load_data(dataset='formatted_veltman_pbp_normalized_small.pkl',
+  verbose=True):
+
+  if verbose: print('Loading dataset...')
 
   dataset = os.path.join(data_path, dataset)
   unpickled = cPickle.load(open(dataset, 'rb'))
